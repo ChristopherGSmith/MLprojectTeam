@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 
 
 def func(pct, data):
@@ -74,7 +73,7 @@ def KNN():
             neighbors = dataLearn.kneighbors([answers], return_distance=False)  # gathering nearest neighbors
             # recording depressed neighbors
             count_depressed = 0.0
-            for points in range(len(neighbors[0])):
+            for points in neighbors[0]:
                 if yT[points] == 1:
                     count_depressed = count_depressed + 1.0
             plt.pie([count_depressed, k[i] - count_depressed],
