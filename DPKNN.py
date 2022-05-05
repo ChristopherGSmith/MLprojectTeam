@@ -6,8 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def func(pct, data):
-    Abs = int(pct / 100. * np.sum(data))
-    return "{:.1f}%\n({:d} Neighbors)".format(pct, Abs)
+    return "{:.1f}%\n".format(pct)
 
 
 def KNN():
@@ -27,7 +26,6 @@ def KNN():
         dataset = np.vstack((dataset, arr))
     # getting rid of headers and converting to int matrix
     dataset = np.delete(dataset, 0, axis=0)
-    headers = dataset[0]
     dataset = np.delete(dataset, 0, axis=0)
     dataset = dataset.astype(float)
     f.close()
@@ -37,7 +35,6 @@ def KNN():
     # Getting rid of 1st two columns because they are identifiers
     X = np.delete(X, 0, axis=1)
     X = np.delete(X, 0, axis=1)
-    xT, X, yT, y = train_test_split(X, divider, test_size=.25, random_state=1)
     running = 1
     while running == 1:
         # Getting user input
@@ -64,27 +61,27 @@ def KNN():
         answers[18] = input('Patient total lasting investment?: ')
         answers[19] = input('Patient total of non lasting investment?: ')
 
-        k = [3, 37, 733]  # small, optimal, large
+        k = [3, 15, 733]  # small, optimal, large
         DP = ['Depressed', 'Not Depressed']
         for i in range(3):
             # Implementing SKlearn for KNN and used the sqrt of the total amount of samples(1430) for K neighbors
             dataLearn = KNeighborsClassifier(n_neighbors=k[i])
-            dataLearn.fit(xT, yT)  # fitting the data
+            dataLearn.fit(X, divider)  # fitting the data
             neighbors = dataLearn.kneighbors([answers], return_distance=False)  # gathering nearest neighbors
             # recording depressed neighbors
             count_depressed = 0.0
             for points in neighbors[0]:
-                if yT[points] == 1:
+                if divider[points] == 1:
                     count_depressed = count_depressed + 1.0
             plt.pie([count_depressed, k[i] - count_depressed],
                     autopct=lambda pct: func(pct, [count_depressed, k[i] - count_depressed]),
-                    textprops={'fontsize': 6}, startangle=90)
+                    textprops={'fontsize': 12}, startangle=90)
             plt.title('KNN with K = %(K)d ' % {'K': k[i]})
-            plt.legend(DP, loc='upper right', prop={'size': 10})
+            plt.legend(DP, loc='lower left', prop={'size': 10})
             plt.savefig("KNN{}".format(i+1))
             plt.close()
         # seeing if another patient needs to be recorded
-        answer = input('Another patient? 0 = No 1 = Yes: ')
+        answer = int(input('Another patient? 0 = No 1 = Yes: '))
         if not answer:
             running = 0
 
